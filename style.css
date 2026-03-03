@@ -1,5 +1,13 @@
+/* Mobile-First Responsive Styles */
 body {
     overflow-x: hidden;
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    body {
+        font-size: 16px;
+    }
 }
 
 .sidebar {
@@ -11,6 +19,17 @@ body {
     color: #adb5bd;
     cursor: pointer;
     transition: all 0.3s ease;
+    padding: 0.75rem 1rem !important;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    font-size: 0.95rem;
+}
+
+@media (min-width: 768px) {
+    .sidebar .nav-link {
+        font-size: 1rem;
+    }
 }
 
 .sidebar .nav-link:hover {
@@ -23,18 +42,101 @@ body {
     color: white;
 }
 
+/* Mobile-first: Offcanvas sidebar half-width on phones */
+.offcanvas {
+    width: 50vw !important;
+}
+
+@media (min-width: 768px) {
+    .offcanvas {
+        width: auto !important;
+    }
+}
+
+/* Mobile-first: Responsive heading sizes */
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+    h2 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+    }
+}
+
+h4 {
+    font-size: 1.1rem;
+}
+
+@media (min-width: 768px) {
+    h4 {
+        font-size: 1.3rem;
+    }
+}
+
+/* Mobile-first: Card icon sizing */
 .card-icon {
-    font-size: 30px;
+    font-size: 20px;
+}
+
+@media (min-width: 768px) {
+    .card-icon {
+        font-size: 30px;
+    }
 }
 
 .stat-card {
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 1rem;
+}
+
+@media (min-width: 576px) {
+    .stat-card {
+        margin-bottom: 0;
+    }
 }
 
 .stat-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Mobile-first: Stat card body adjustments */
+.stat-card .card-body {
+    padding: 1rem;
+    flex-direction: column;
+}
+
+@media (min-width: 576px) {
+    .stat-card .card-body {
+        flex-direction: row;
+        padding: 1.25rem;
+    }
+}
+
+/* Mobile-first: Stat card text sizing */
+.stat-card h5 {
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+}
+
+@media (min-width: 576px) {
+    .stat-card h5 {
+        font-size: 0.95rem;
+    }
+}
+
+.stat-card h3 {
+    font-size: 1.5rem;
+}
+
+@media (min-width: 576px) {
+    .stat-card h3 {
+        font-size: 2rem;
+    }
 }
 
 .section {
@@ -59,18 +161,29 @@ body {
     margin-bottom: 20px;
 }
 
+/* Mobile-first: Responsive modal */
 .stat-detail {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background: white;
-    padding: 30px;
+    padding: 1.5rem;
     border-radius: 10px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
     z-index: 1000;
-    max-width: 500px;
+    max-width: 90vw;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
     display: none;
+}
+
+@media (min-width: 576px) {
+    .stat-detail {
+        max-width: 500px;
+        padding: 2rem;
+    }
 }
 
 .stat-detail.show {
@@ -94,6 +207,81 @@ body {
 
 .btn-action {
     margin: 5px;
+    min-height: 36px;
+    min-width: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (min-width: 576px) {
+    .btn-action {
+        min-height: 38px;
+        min-width: 38px;
+    }
+}
+
+/* Mobile-first: Main content padding */
+main {
+    padding: 1rem;
+}
+
+@media (min-width: 576px) {
+    main {
+        padding: 1rem 1.5rem;
+    }
+}
+
+@media (min-width: 768px) {
+    main {
+        padding: 2rem;
+    }
+}
+
+/* Mobile-first: Table responsiveness */
+.table-responsive {
+    font-size: 0.85rem;
+}
+
+@media (min-width: 576px) {
+    .table-responsive {
+        font-size: 0.95rem;
+    }
+}
+
+/* Mobile-first: Card header and body padding */
+.card-header {
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+}
+
+@media (min-width: 576px) {
+    .card-header {
+        padding: 1rem 1.25rem;
+        font-size: 1rem;
+    }
+}
+
+.card-body {
+    padding: 1rem;
+}
+
+@media (min-width: 576px) {
+    .card-body {
+        padding: 1.25rem;
+    }
+}
+
+/* Mobile-first: Form controls */
+.form-control, .form-check-input {
+    font-size: 1rem;
+    min-height: 44px;
+}
+
+@media (min-width: 576px) {
+    .form-control, .form-check-input {
+        min-height: 38px;
+    }
 }
 
 .highlight-row {

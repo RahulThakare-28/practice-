@@ -60,29 +60,29 @@
                 <h5 class="offcanvas-title">Exam Admin</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
             </div>
-            <div class="offcanvas-body">
-                <ul class="nav nav-pills flex-column">
+            <div class="offcanvas-body p-0">
+                <ul class="nav nav-pills flex-column w-100">
                     <li class="nav-item">
-                        <a class="nav-link active text-white" href="#" onclick="switchSection('dashboard', event)">Dashboard</a>
+                        <a class="nav-link active text-white rounded-0" href="#" onclick="switchSection('dashboard', event)"><i class="bi bi-speedometer2"></i> Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#" onclick="switchSection('students', event)">Students</a>
+                        <a class="nav-link text-white rounded-0" href="#" onclick="switchSection('students', event)"><i class="bi bi-people"></i> Students</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#" onclick="switchSection('exams', event)">Exams</a>
+                        <a class="nav-link text-white rounded-0" href="#" onclick="switchSection('exams', event)"><i class="bi bi-file-earmark-text"></i> Exams</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#" onclick="switchSection('results', event)">Results</a>
+                        <a class="nav-link text-white rounded-0" href="#" onclick="switchSection('results', event)"><i class="bi bi-bar-chart"></i> Results</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#" onclick="switchSection('settings', event)">Settings</a>
+                        <a class="nav-link text-white rounded-0" href="#" onclick="switchSection('settings', event)"><i class="bi bi-gear"></i> Settings</a>
                     </li>
                 </ul>
             </div>
         </div>
 
         <!-- Main Content -->
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+        <main class="col-md-9 ms-sm-auto col-lg-10 p-0 p-sm-3 p-md-4 py-4">
 
             <!-- Overlay for modals -->
             <div class="overlay" onclick="closeStatDetail()"></div>
@@ -92,8 +92,8 @@
                 <h2 class="mb-4">Dashboard Overview</h2>
 
                 <!-- Statistics Cards -->
-                <div class="row g-4">
-                    <div class="col-sm-6 col-lg-3">
+                <div class="row g-3 g-sm-4">
+                    <div class="col-12 col-sm-6 col-lg-3">
                         <div class="card text-white bg-primary shadow stat-card" onclick="showStatDetail('Total Students', '1,200', 'Students registered in the system')">
                             <div class="card-body d-flex justify-content-between align-items-center">
                                 <div>
@@ -105,7 +105,7 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-6 col-lg-3">
+                    <div class="col-12 col-sm-6 col-lg-3">
                         <div class="card text-white bg-success shadow stat-card" onclick="showStatDetail('Total Exams', '35', 'Exams created and scheduled')">
                             <div class="card-body d-flex justify-content-between align-items-center">
                                 <div>
@@ -117,7 +117,7 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-6 col-lg-3">
+                    <div class="col-12 col-sm-6 col-lg-3">
                         <div class="card text-white bg-warning shadow stat-card" onclick="showStatDetail('Pending Results', '12', 'Results awaiting evaluation')">
                             <div class="card-body d-flex justify-content-between align-items-center">
                                 <div>
@@ -129,7 +129,7 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-6 col-lg-3">
+                    <div class="col-12 col-sm-6 col-lg-3">
                         <div class="card text-white bg-danger shadow stat-card" onclick="showStatDetail('Failed Students', '45', 'Students who did not pass')">
                             <div class="card-body d-flex justify-content-between align-items-center">
                                 <div>
@@ -193,7 +193,7 @@
                     <div class="card-body">
                         <button class="btn btn-primary mb-3" onclick="addNewExam()"><i class="bi bi-plus"></i> Create Exam</button>
                         <p class="text-muted">Manage and schedule exams for students.</p>
-                        <div id="examsList" class="row"></div>
+                        <div id="examsList" class="row g-3"></div>
                     </div>
                 </div>
             </div>

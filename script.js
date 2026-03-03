@@ -105,7 +105,7 @@ function renderExams() {
 
     exams.forEach(exam => {
         const card = document.createElement('div');
-        card.className = 'col-md-6 col-lg-4 mb-3';
+        card.className = 'col-12 col-sm-6 col-lg-4 mb-3';
         card.innerHTML = `
             <div class="card">
                 <div class="card-body">
