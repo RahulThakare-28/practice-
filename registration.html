@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration - AJAX with Local Storage</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="registrationStyle.css">
+</head>
+<body class="bg-light">
+
+    <div class="min-vh-100 d-flex align-items-center py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-8 col-lg-6">
+                    <div class="card shadow-lg border-0">
+                        <div class="card-header bg-primary text-white py-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h2 class="mb-0"><i class="bi bi-person-check"></i> User Registration</h2>
+                                <a href="registrationList.html" class="btn btn-light btn-sm" title="View all registrations">
+                                    <i class="bi bi-list-check"></i> View List
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="card-body p-4">
+                            <!-- Alert Messages -->
+                            <div id="successAlert" class="alert alert-success alert-dismissible fade show d-none" role="alert">
+                                <i class="bi bi-check-circle"></i> <span id="successMessage"></span>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                            <div id="errorAlert" class="alert alert-danger alert-dismissible fade show d-none" role="alert">
+                                <i class="bi bi-exclamation-circle"></i> <span id="errorMessage"></span>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+
+                            <!-- Registration Form -->
+                            <form id="registrationForm" name="registrationForm" novalidate>
+
+                                <!-- Full Name -->
+                                <div class="mb-3">
+                                    <label for="fullName" class="form-label">Full Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="fullName" name="fullName"
+                                           placeholder="Enter your full name" required>
+                                    <div class="invalid-feedback" id="fullNameError"></div>
+                                </div>
+
+                                <!-- Email -->
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email Address <span class="text-danger">*</span></label>
+                                    <input type="email" class="form-control" id="email" name="email"
+                                           placeholder="Enter your email" required>
+                                    <div class="invalid-feedback" id="emailError"></div>
+                                </div>
+
+                                <!-- Phone -->
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Phone Number <span class="text-danger">*</span></label>
+                                    <input type="tel" class="form-control" id="phone" name="phone"
+                                           placeholder="Enter 10-digit phone number" pattern="[0-9]{10}" required>
+                                    <div class="invalid-feedback" id="phoneError"></div>
+                                </div>
+
+                                <!-- Password -->
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
+                                    <input type="password" class="form-control" id="password" name="password"
+                                           placeholder="Enter password (min 6 characters)" required>
+                                    <div class="invalid-feedback" id="passwordError"></div>
+                                    <small class="form-text text-muted">Min 6 characters, including uppercase, lowercase, and number</small>
+                                </div>
+
+                                <!-- Confirm Password -->
+                                <div class="mb-3">
+                                    <label for="confirmPassword" class="form-label">Confirm Password <span class="text-danger">*</span></label>
+                                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
+                                           placeholder="Confirm your password" required>
+                                    <div class="invalid-feedback" id="confirmPasswordError"></div>
+                                </div>
+
+                                <!-- Gender -->
+                                <div class="mb-3">
+                                    <label class="form-label">Gender <span class="text-danger">*</span></label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="gender" id="male" value="Male" required>
+                                        <label class="form-check-label" for="male">Male</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="gender" id="female" value="Female">
+                                        <label class="form-check-label" for="female">Female</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="gender" id="other" value="Other">
+                                        <label class="form-check-label" for="other">Other</label>
+                                    </div>
+                                    <div class="invalid-feedback d-block" id="genderError"></div>
+                                </div>
+
+                                <!-- Address -->
+                                <div class="mb-3">
+                                    <label for="address" class="form-label">Address</label>
+                                    <textarea class="form-control" id="address" name="address" rows="3"
+                                              placeholder="Enter your address (optional)" maxlength="500"></textarea>
+                                    <small class="form-text text-muted"><span id="charCount">0</span>/500 characters</small>
+                                </div>
+
+                                <!-- Email Consent -->
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="emailConsent" name="emailConsent">
+                                        <label class="form-check-label" for="emailConsent">
+                                            I agree to receive newsletters and updates
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Terms and Conditions -->
+                                <div class="mb-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="terms" name="terms" required>
+                                        <label class="form-check-label" for="terms">
+                                            I agree to the <a href="#" class="text-primary" data-bs-toggle="tooltip"
+                                                            title="Terms and conditions">terms and conditions</a> <span class="text-danger">*</span>
+                                        </label>
+                                    </div>
+                                    <div class="invalid-feedback d-block" id="termsError"></div>
+                                </div>
+
+                                <!-- Buttons -->
+                                <div class="d-grid gap-2 d-sm-flex">
+                                    <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                                        <i class="bi bi-check-circle"></i> Register
+                                    </button>
+                                    <button type="reset" class="btn btn-outline-secondary btn-lg">
+                                        <i class="bi bi-arrow-clockwise"></i> Clear
+                                    </button>
+                                </div>
+
+                                <!-- Loading Spinner -->
+                                <div id="loadingSpinner" class="d-none mt-3">
+                                    <div class="spinner-border spinner-border-sm text-primary me-2" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <span class="text-muted">Submitting registration...</span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Info Box -->
+                    <div class="alert alert-info mt-4" role="alert">
+                        <i class="bi bi-info-circle"></i> <strong>Note:</strong> Your data is stored securely in your browser's local storage
+                        and will persist across sessions.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom Registration Script -->
+    <script src="registrationScript.js"></script>
+
+    <script>
+        // Initialize tooltips
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        const tooltipList = tooltipTriggerList.map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
+        // Character counter for address
+        const addressField = document.getElementById('address');
+        const charCount = document.getElementById('charCount');
+        addressField.addEventListener('input', () => {
+            charCount.textContent = addressField.value.length;
+        });
+
+        // Form submission
+        document.getElementById('registrationForm').addEventListener('submit', submitRegistration);
+    </script>
+</body>
+</html>

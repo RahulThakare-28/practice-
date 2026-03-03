@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration List - View All Users</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="registrationStyle.css">
+</head>
+<body class="bg-light">
+
+    <div class="min-vh-100 py-5">
+        <div class="container-fluid">
+            <!-- Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card shadow-lg border-0">
+                        <div class="card-header bg-success text-white py-4">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                                <h2 class="mb-0"><i class="bi bi-list-check"></i> Registered Users</h2>
+                                <div class="d-flex gap-2">
+                                    <a href="registration.html" class="btn btn-light btn-sm">
+                                        <i class="bi bi-plus-circle"></i> New Registration
+                                    </a>
+                                    <button onclick="exportToCSV()" class="btn btn-light btn-sm" title="Export to CSV">
+                                        <i class="bi bi-download"></i> Export
+                                    </button>
+                                    <button onclick="clearAllData()" class="btn btn-outline-light btn-sm" title="Clear all data">
+                                        <i class="bi bi-trash"></i> Clear All
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body p-4">
+                            <!-- Statistics -->
+                            <div class="row mb-4">
+                                <div class="col-md-3">
+                                    <div class="card bg-light border-0">
+                                        <div class="card-body text-center">
+                                            <h5 class="card-title text-muted">Total Users</h5>
+                                            <h2 class="text-primary" id="totalCount">0</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card bg-light border-0">
+                                        <div class="card-body text-center">
+                                            <h5 class="card-title text-muted">Email Subscribers</h5>
+                                            <h2 class="text-success" id="subscriberCount">0</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card bg-light border-0">
+                                        <div class="card-body text-center">
+                                            <h5 class="card-title text-muted">Male Users</h5>
+                                            <h2 class="text-info" id="maleCount">0</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card bg-light border-0">
+                                        <div class="card-body text-center">
+                                            <h5 class="card-title text-muted">Female Users</h5>
+                                            <h2 class="text-danger" id="femaleCount">0</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Search/Filter -->
+                            <div class="mb-3">
+                                <input type="text" id="searchInput" class="form-control" placeholder="Search by name, email, or phone...">
+                            </div>
+
+                            <!-- Alert Messages -->
+                            <div id="emptyAlert" class="alert alert-info" role="alert">
+                                <i class="bi bi-info-circle"></i> No registrations found yet.
+                                <a href="registration.html" class="alert-link">Create one now</a>
+                            </div>
+
+                            <!-- Table -->
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="registrationTable">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Full Name</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Gender</th>
+                                            <th>Address</th>
+                                            <th>Email Consent</th>
+                                            <th>Registered</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tableBody">
+                                        <!-- Populated by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Details Modal -->
+    <div class="modal fade" id="viewModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title"><i class="bi bi-eye"></i> User Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <!-- Details populated by JavaScript -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // ==================== CONSTANTS ====================
+        const STORAGE_KEY = 'registrations';
+
+        // ==================== LOCAL STORAGE FUNCTIONS ====================
+
+        /**
+         * Get all registrations from local storage
+         */
+        function getFromLocalStorage() {
+            try {
+                const data = localStorage.getItem(STORAGE_KEY);
+                return data ? JSON.parse(data) : [];
+            } catch (error) {
+                console.error('Error reading from local storage:', error);
+                return [];
+            }
+        }
+
+        /**
+         * Delete registration from local storage
+         */
+        function deleteFromLocalStorage(id) {
+            try {
+                let registrations = getFromLocalStorage();
+                registrations = registrations.filter(reg => reg.id !== id);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(registrations));
+                return true;
+            } catch (error) {
+                console.error('Error deleting from local storage:', error);
+                return false;
+            }
+        }
+
+        // ==================== DISPLAY FUNCTIONS ====================
+
+        /**
+         * Format date to readable format
+         */
+        function formatDate(dateString) {
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } catch {
+                return dateString;
+            }
+        }
+
+        /**
+         * Display all registrations in table
+         */
+        function displayRegistrations(filter = '') {
+            const registrations = getFromLocalStorage();
+            const tableBody = document.getElementById('tableBody');
+            const emptyAlert = document.getElementById('emptyAlert');
+            const registrationTable = document.getElementById('registrationTable');
+
+            // Filter registrations
+            let filtered = registrations;
+            if (filter) {
+                const searchTerm = filter.toLowerCase();
+                filtered = registrations.filter(reg =>
+                    reg.fullName.toLowerCase().includes(searchTerm) ||
+                    reg.email.toLowerCase().includes(searchTerm) ||
+                    reg.phone.includes(searchTerm)
+                );
+            }
+
+            // Clear table
+            tableBody.innerHTML = '';
+
+            if (filtered.length === 0) {
+                emptyAlert.classList.remove('d-none');
+                registrationTable.classList.add('d-none');
+                updateStatistics([]);
+                return;
+            }
+
+            emptyAlert.classList.add('d-none');
+            registrationTable.classList.remove('d-none');
+
+            // Populate table
+            filtered.forEach((registration, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td><strong>${registration.fullName}</strong></td>
+                    <td>${registration.email}</td>
+                    <td>${registration.phone}</td>
+                    <td>
+                        <span class="badge bg-secondary">${registration.gender}</span>
+                    </td>
+                    <td>
+                        <small>${registration.address || '-'}</small>
+                    </td>
+                    <td>
+                        ${registration.emailConsent ?
+                            '<i class="bi bi-check-circle text-success"></i> Yes' :
+                            '<i class="bi bi-x-circle text-danger"></i> No'}
+                    </td>
+                    <td>
+                        <small>${formatDate(registration.timestamp)}</small>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-info" onclick="viewDetails('${registration.id}')" title="View">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteRegistration('${registration.id}')" title="Delete">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            updateStatistics(filtered);
+        }
+
+        /**
+         * View user details in modal
+         */
+        function viewDetails(id) {
+            const registrations = getFromLocalStorage();
+            const registration = registrations.find(reg => reg.id === id);
+
+            if (!registration) return;
+
+            const modalBody = document.getElementById('modalBody');
+            modalBody.innerHTML = `
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <strong>Full Name:</strong>
+                    </div>
+                    <div class="col-6">
+                        ${registration.fullName}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <strong>Email:</strong>
+                    </div>
+                    <div class="col-6">
+                        <a href="mailto:${registration.email}">${registration.email}</a>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <strong>Phone:</strong>
+                    </div>
+                    <div class="col-6">
+                        <a href="tel:${registration.phone}">${registration.phone}</a>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <strong>Gender:</strong>
+                    </div>
+                    <div class="col-6">
+                        ${registration.gender}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <strong>Address:</strong>
+                    </div>
+                    <div class="col-6">
+                        ${registration.address || 'Not provided'}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <strong>Email Consent:</strong>
+                    </div>
+                    <div class="col-6">
+                        ${registration.emailConsent ? 'Yes' : 'No'}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <strong>Registered Date:</strong>
+                    </div>
+                    <div class="col-6">
+                        ${formatDate(registration.timestamp)}
+                    </div>
+                </div>
+            `;
+
+            const viewModal = new bootstrap.Modal(document.getElementById('viewModal'));
+            viewModal.show();
+        }
+
+        /**
+         * Delete registration with confirmation
+         */
+        function deleteRegistration(id) {
+            if (confirm('Are you sure you want to delete this registration?')) {
+                if (deleteFromLocalStorage(id)) {
+                    displayRegistrations();
+                    alert('Registration deleted successfully');
+                } else {
+                    alert('Failed to delete registration');
+                }
+            }
+        }
+
+        /**
+         * Update statistics
+         */
+        function updateStatistics(registrations = null) {
+            if (!registrations) {
+                registrations = getFromLocalStorage();
+            }
+
+            document.getElementById('totalCount').textContent = registrations.length;
+            document.getElementById('subscriberCount').textContent =
+                registrations.filter(r => r.emailConsent).length;
+            document.getElementById('maleCount').textContent =
+                registrations.filter(r => r.gender === 'Male').length;
+            document.getElementById('femaleCount').textContent =
+                registrations.filter(r => r.gender === 'Female').length;
+        }
+
+        /**
+         * Export data to CSV
+         */
+        function exportToCSV() {
+            const registrations = getFromLocalStorage();
+            if (registrations.length === 0) {
+                alert('No data to export');
+                return;
+            }
+
+            let csv = 'Full Name,Email,Phone,Gender,Address,Email Consent,Registered Date\n';
+
+            registrations.forEach(reg => {
+                csv += `"${reg.fullName}","${reg.email}","${reg.phone}","${reg.gender}","${reg.address || ''}","${reg.emailConsent ? 'Yes' : 'No'}","${reg.timestamp}"\n`;
+            });
+
+            // Create blob and download
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+
+            link.setAttribute('href', url);
+            link.setAttribute('download', `registrations_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        /**
+         * Clear all data with confirmation
+         */
+        function clearAllData() {
+            if (confirm('Are you sure? This will delete ALL registrations permanently!')) {
+                if (confirm('This action cannot be undone. Continue?')) {
+                    localStorage.removeItem(STORAGE_KEY);
+                    displayRegistrations();
+                    alert('All data has been cleared');
+                }
+            }
+        }
+
+        // ==================== INITIALIZATION ====================
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Registration list page loaded');
+
+            // Display registrations
+            displayRegistrations();
+
+            // Search functionality
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('keyup', function() {
+                displayRegistrations(this.value);
+            });
+
+            console.log('Total registrations:', getFromLocalStorage().length);
+        });
+    </script>
+</body>
+</html>

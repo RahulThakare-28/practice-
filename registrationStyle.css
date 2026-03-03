@@ -1,0 +1,436 @@
+/* ==================== REGISTRATION STYLES ==================== */
+
+:root {
+    --primary-color: #0d6efd;
+    --success-color: #198754;
+    --danger-color: #dc3545;
+    --info-color: #0dcaf0;
+    --light-bg: #f8f9fa;
+    --border-radius: 0.5rem;
+    --box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+/* ==================== GENERAL STYLES ==================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    background-color: var(--light-bg);
+}
+
+@media (min-width: 768px) {
+    body {
+        font-size: 16px;
+    }
+}
+
+/* ==================== FORM STYLES ==================== */
+
+.form-label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.form-control,
+.form-select {
+    border-radius: var(--border-radius);
+    border: 1px solid #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+
+.form-control::placeholder {
+    color: #999;
+    font-size: 0.9rem;
+}
+
+.form-check {
+    padding-left: 1.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.form-check-input {
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 0.25rem;
+    border: 1px solid #dee2e6;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.form-check-input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.form-check-label {
+    cursor: pointer;
+    margin-bottom: 0;
+    padding-top: 0.125rem;
+}
+
+.invalid-feedback {
+    display: block;
+    color: var(--danger-color);
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+/* ==================== CARD STYLES ==================== */
+
+.card {
+    border-radius: var(--border-radius);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.card-title {
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+/* ==================== BUTTON STYLES ==================== */
+
+.btn {
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.875rem;
+}
+
+.btn-primary,
+.btn-success,
+.btn-danger,
+.btn-info {
+    border: none;
+}
+
+.btn-primary:hover,
+.btn-success:hover,
+.btn-danger:hover,
+.btn-info:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary:active,
+.btn-success:active,
+.btn-danger:active,
+.btn-info:active {
+    transform: translateY(0);
+}
+
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+}
+
+.btn-sm {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.8rem;
+}
+
+.btn-outline-secondary {
+    border-width: 2px;
+}
+
+/* ==================== ALERT STYLES ==================== */
+
+.alert {
+    border-radius: var(--border-radius);
+    border: none;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.alert-success {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+.alert-info {
+    background-color: #cfe2ff;
+    color: #084298;
+}
+
+.alert-dismissible .btn-close {
+    padding: 0.5rem;
+}
+
+/* ==================== SPINNER STYLES ==================== */
+
+.spinner-border {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-width: 0.2rem;
+}
+
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+    border-width: 0.15rem;
+}
+
+/* ==================== TABLE STYLES ==================== */
+
+.table {
+    margin-bottom: 0;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.table thead {
+    background-color: #212529;
+    color: white;
+    font-weight: 600;
+}
+
+.table thead th {
+    border: none;
+    padding: 1rem;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.table tbody tr {
+    transition: all 0.3s ease;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.table tbody td {
+    padding: 1rem;
+    vertical-align: middle;
+}
+
+.table-responsive {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+/* ==================== RESPONSIVE STYLES ==================== */
+
+/* Mobile First */
+.min-vh-100 {
+    min-height: 100vh;
+}
+
+@media (max-width: 576px) {
+    body {
+        font-size: 13px;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+
+    .form-label {
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        font-size: 0.75rem;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .btn-lg {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+    }
+
+    .table thead th,
+    .table tbody td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    .d-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.7rem;
+    }
+
+    .badge {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.6rem;
+    }
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+    .table thead th,
+    .table tbody td {
+        padding: 0.85rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (min-width: 769px) {
+    .container-fluid {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .d-grid {
+        grid-template-columns: auto auto;
+    }
+}
+
+/* ==================== UTILITY CLASSES ==================== */
+
+.text-muted {
+    color: #6c757d;
+}
+
+.text-danger {
+    color: var(--danger-color);
+}
+
+.text-success {
+    color: var(--success-color);
+}
+
+.text-info {
+    color: var(--info-color);
+}
+
+.text-primary {
+    color: var(--primary-color);
+}
+
+.badge {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 0.25rem;
+    text-transform: capitalize;
+}
+
+.bg-light {
+    background-color: var(--light-bg);
+}
+
+/* ==================== ANIMATION STYLES ==================== */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease;
+}
+
+/* ==================== ACCESSIBILITY ==================== */
+
+a:focus,
+button:focus,
+input:focus,
+textarea:focus,
+select:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Remove outline for mouse users */
+button:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* ==================== PRINT STYLES ==================== */
+
+@media print {
+    .btn,
+    .card-header,
+    .alert-dismissible {
+        display: none;
+    }
+
+    body {
+        background: white;
+    }
+
+    .card {
+        box-shadow: none;
+        border: 1px solid #dee2e6;
+    }
+}
+
+/* ==================== DARK MODE (Optional) ==================== */
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e0e0e0;
+    }
+
+    .card {
+        background-color: #2a2a2a;
+        color: #e0e0e0;
+    }
+
+    .form-control,
+    .form-select {
+        background-color: #333;
+        color: #e0e0e0;
+        border-color: #444;
+    }
+
+    .table {
+        color: #e0e0e0;
+    }
+
+    .table tbody tr:hover {
+        background-color: #3a3a3a;
+    }
+}
