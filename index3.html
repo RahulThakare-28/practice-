@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Exam Admin Dashboard</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- Top Navbar -->
+<nav class="navbar navbar-dark bg-dark d-md-none">
+    <div class="container-fluid">
+        <button class="btn btn-outline-light" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
+            <i class="bi bi-list"></i>
+        </button>
+        <span class="navbar-brand mb-0 h1">Exam Admin</span>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- Sidebar (Desktop) -->
+        <nav class="col-md-3 col-lg-2 d-none d-md-block sidebar p-3">
+            <h4 class="text-white">Exam Admin</h4>
+            <hr class="text-secondary">
+            <ul class="nav nav-pills flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#" onclick="switchSection('dashboard', event)"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="switchSection('students', event)"><i class="bi bi-people"></i> Students</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="switchSection('exams', event)"><i class="bi bi-file-earmark-text"></i> Exams</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="switchSection('results', event)"><i class="bi bi-bar-chart"></i> Results</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="switchSection('settings', event)"><i class="bi bi-gear"></i> Settings</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Sidebar (Mobile Offcanvas) -->
+        <div class="offcanvas offcanvas-start bg-dark text-white" tabindex="-1" id="sidebarMenu">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title">Exam Admin</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+            </div>
+            <div class="offcanvas-body">
+                <ul class="nav nav-pills flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active text-white" href="#" onclick="switchSection('dashboard', event)">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#" onclick="switchSection('students', event)">Students</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#" onclick="switchSection('exams', event)">Exams</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#" onclick="switchSection('results', event)">Results</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#" onclick="switchSection('settings', event)">Settings</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+
+            <!-- Overlay for modals -->
+            <div class="overlay" onclick="closeStatDetail()"></div>
+
+            <!-- Dashboard Section -->
+            <div id="dashboard" class="section active">
+                <h2 class="mb-4">Dashboard Overview</h2>
+
+                <!-- Statistics Cards -->
+                <div class="row g-4">
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card text-white bg-primary shadow stat-card" onclick="showStatDetail('Total Students', '1,200', 'Students registered in the system')">
+                            <div class="card-body d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5>Total Students</h5>
+                                    <h3>1,200</h3>
+                                </div>
+                                <i class="bi bi-people card-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card text-white bg-success shadow stat-card" onclick="showStatDetail('Total Exams', '35', 'Exams created and scheduled')">
+                            <div class="card-body d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5>Total Exams</h5>
+                                    <h3>35</h3>
+                                </div>
+                                <i class="bi bi-file-earmark-text card-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card text-white bg-warning shadow stat-card" onclick="showStatDetail('Pending Results', '12', 'Results awaiting evaluation')">
+                            <div class="card-body d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5>Pending Results</h5>
+                                    <h3>12</h3>
+                                </div>
+                                <i class="bi bi-clock card-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card text-white bg-danger shadow stat-card" onclick="showStatDetail('Failed Students', '45', 'Students who did not pass')">
+                            <div class="card-body d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5>Failed Students</h5>
+                                    <h3>45</h3>
+                                </div>
+                                <i class="bi bi-x-circle card-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table Section -->
+                <div class="card mt-5 shadow">
+                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                        <span>Recent Exam Results</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="search-box">
+                            <input type="text" class="form-control" id="searchInput" placeholder="Search by student name or exam...">
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="resultsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Student Name</th>
+                                        <th>Exam</th>
+                                        <th>Marks</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Students Section -->
+            <div id="students" class="section">
+                <h2 class="mb-4">Students Management</h2>
+                <div class="card shadow">
+                    <div class="card-header bg-dark text-white">
+                        All Students
+                    </div>
+                    <div class="card-body">
+                        <button class="btn btn-primary mb-3" onclick="addNewStudent()"><i class="bi bi-plus"></i> Add Student</button>
+                        <div id="studentsList" class="list-group"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exams Section -->
+            <div id="exams" class="section">
+                <h2 class="mb-4">Exams Management</h2>
+                <div class="card shadow">
+                    <div class="card-header bg-dark text-white">
+                        All Exams
+                    </div>
+                    <div class="card-body">
+                        <button class="btn btn-primary mb-3" onclick="addNewExam()"><i class="bi bi-plus"></i> Create Exam</button>
+                        <p class="text-muted">Manage and schedule exams for students.</p>
+                        <div id="examsList" class="row"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div id="results" class="section">
+                <h2 class="mb-4">Results Analysis</h2>
+                <div class="card shadow">
+                    <div class="card-header bg-dark text-white">
+                        Results Statistics
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Average Pass Rate:</strong> <span class="badge bg-success">78%</span></p>
+                                <p><strong>Total Evaluations:</strong> 487</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Highest Score:</strong> 98 (Mathematics)</p>
+                                <p><strong>Lowest Score:</strong> 22 (Physics)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div id="settings" class="section">
+                <h2 class="mb-4">Settings</h2>
+                <div class="card shadow">
+                    <div class="card-header bg-dark text-white">
+                        System Settings
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="mb-3">
+                                <label class="form-label">Exam Duration (minutes)</label>
+                                <input type="number" class="form-control" value="120">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Passing Score (%)</label>
+                                <input type="number" class="form-control" value="40">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-check-label">
+                                    <input type="checkbox" class="form-check-input" checked> Enable Notifications
+                                </label>
+                            </div>
+                            <button type="button" class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Stat Detail Modal -->
+        <div class="stat-detail" id="statDetail">
+            <button type="button" class="btn-close" onclick="closeStatDetail()"></button>
+            <h3 id="statTitle"></h3>
+            <h4 class="text-primary" id="statValue"></h4>
+            <p id="statDesc" class="text-muted"></p>
+            <button class="btn btn-primary" onclick="closeStatDetail()">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Custom Script -->
+<script src="script.js"></script>
+
+</body>
+</html>
