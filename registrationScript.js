@@ -1,437 +1,139 @@
-// ==================== AJAX Registration Script ====================
-// Handles form submission, validation, AJAX simulation, and local storage
+// ==================== SIMPLE REGISTRATION WITH AJAX & LOCAL STORAGE ====================
 
-// ==================== CONSTANTS ====================
 const STORAGE_KEY = 'registrations';
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE_REGEX = /^\d{10}$/;
-const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
-const NAME_REGEX = /^[a-zA-Z\s]{3,}$/;
 
-// ==================== FORM VALIDATION ====================
+// ==================== GET FORM DATA ====================
 
-/**
- * Validate full name field
- */
-function validateFullName(fullName) {
-    if (!fullName || fullName.trim() === '') {
-        return 'Full name is required';
-    }
-    if (fullName.trim().length < 3) {
-        return 'Full name must be at least 3 characters';
-    }
-    if (!NAME_REGEX.test(fullName)) {
-        return 'Full name can only contain letters and spaces';
-    }
-    return '';
+function getFormData() {
+    return {
+        fullName: document.getElementById('fullName').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        password: document.getElementById('password').value,
+        confirmPassword: document.getElementById('confirmPassword').value,
+        gender: document.querySelector('input[name="gender"]:checked')?.value,
+        address: document.getElementById('address').value,
+        emailConsent: document.getElementById('emailConsent').checked
+    };
 }
 
-/**
- * Validate email field and check for duplicates
- */
-function validateEmail(email) {
-    if (!email || email.trim() === '') {
-        return 'Email is required';
-    }
-    if (!EMAIL_REGEX.test(email)) {
-        return 'Please enter a valid email address';
-    }
-    // Check for duplicate email
-    const registrations = getFromLocalStorage();
-    if (registrations.some(reg => reg.email.toLowerCase() === email.toLowerCase())) {
-        return 'This email is already registered';
-    }
-    return '';
-}
+// ==================== SIMPLE VALIDATION ====================
 
-/**
- * Validate phone field
- */
-function validatePhone(phone) {
-    if (!phone || phone.trim() === '') {
-        return 'Phone number is required';
-    }
-    if (!PHONE_REGEX.test(phone)) {
-        return 'Phone must be exactly 10 digits';
-    }
-    return '';
-}
-
-/**
- * Validate password field
- */
-function validatePassword(password) {
-    if (!password) {
-        return 'Password is required';
-    }
-    if (password.length < 6) {
-        return 'Password must be at least 6 characters';
-    }
-    if (!PASSWORD_REGEX.test(password)) {
-        return 'Password must contain uppercase, lowercase letters and numbers';
-    }
-    return '';
-}
-
-/**
- * Validate confirm password matches password
- */
-function validateConfirmPassword(password, confirmPassword) {
-    if (!confirmPassword) {
-        return 'Confirm password is required';
-    }
-    if (password !== confirmPassword) {
-        return 'Passwords do not match';
-    }
-    return '';
-}
-
-/**
- * Validate gender selection
- */
-function validateGender() {
-    return document.querySelector('input[name="gender"]:checked') ? '' : 'Please select a gender';
-}
-
-/**
- * Validate terms acceptance
- */
-function validateTerms() {
-    return document.getElementById('terms').checked ? '' : 'You must agree to terms and conditions';
-}
-
-/**
- * Main form validation function
- */
-function validateForm(formData) {
-    const errors = {};
-
-    // Validate each field
-    const fullNameError = validateFullName(formData.fullName);
-    if (fullNameError) errors.fullName = fullNameError;
-
-    const emailError = validateEmail(formData.email);
-    if (emailError) errors.email = emailError;
-
-    const phoneError = validatePhone(formData.phone);
-    if (phoneError) errors.phone = phoneError;
-
-    const passwordError = validatePassword(formData.password);
-    if (passwordError) errors.password = passwordError;
-
-    const confirmPasswordError = validateConfirmPassword(formData.password, formData.confirmPassword);
-    if (confirmPasswordError) errors.confirmPassword = confirmPasswordError;
-
-    const genderError = validateGender();
-    if (genderError) errors.gender = genderError;
-
-    const termsError = validateTerms();
-    if (termsError) errors.terms = termsError;
-
-    return errors;
-}
-
-/**
- * Display validation errors on form
- */
-function displayValidationErrors(errors) {
-    // Clear previous errors
-    document.querySelectorAll('.invalid-feedback').forEach(el => el.textContent = '');
-    document.getElementById('errorAlert').classList.add('d-none');
-
-    if (Object.keys(errors).length === 0) {
-        return true;
-    }
-
-    let errorMessage = 'Please fix the following errors:\n';
-    for (const [field, message] of Object.entries(errors)) {
-        if (field === 'terms' || field === 'gender') continue; // Handle separately
-
-        const errorElement = document.getElementById(`${field}Error`);
-        if (errorElement) {
-            errorElement.textContent = message;
-        }
-        errorMessage += `- ${message}\n`;
-    }
-
-    if (errors.gender) {
-        const genderError = document.getElementById('genderError');
-        if (genderError) genderError.textContent = errors.gender;
-    }
-
-    if (errors.terms) {
-        const termsError = document.getElementById('termsError');
-        if (termsError) termsError.textContent = errors.terms;
-    }
-
-    return false;
+function validateForm(data) {
+    if (!data.fullName) return 'Full name is required';
+    if (!data.email) return 'Email is required';
+    if (!data.phone) return 'Phone is required';
+    if (data.phone.length !== 10) return 'Phone must be 10 digits';
+    if (!data.password) return 'Password is required';
+    if (data.password.length < 6) return 'Password must be 6+ characters';
+    if (data.password !== data.confirmPassword) return 'Passwords do not match';
+    if (!data.gender) return 'Please select gender';
+    return null;
 }
 
 // ==================== LOCAL STORAGE FUNCTIONS ====================
 
-/**
- * Generate unique ID for registration
- */
-function generateId() {
-    return '_' + Math.random().toString(36).substr(2, 9);
+function saveToLocalStorage(data) {
+    try {
+        let registrations = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+        data.id = Date.now();
+        data.timestamp = new Date().toLocaleString();
+        registrations.push(data);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(registrations));
+        return true;
+    } catch (error) {
+        console.error('Error saving:', error);
+        return false;
+    }
 }
 
-/**
- * Get all registrations from local storage
- */
 function getFromLocalStorage() {
     try {
-        const data = localStorage.getItem(STORAGE_KEY);
-        return data ? JSON.parse(data) : [];
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
     } catch (error) {
-        console.error('Error reading from local storage:', error);
+        console.error('Error reading:', error);
         return [];
     }
 }
 
-/**
- * Save registration to local storage
- */
-function saveToLocalStorage(registration) {
-    try {
-        const registrations = getFromLocalStorage();
-        registration.id = generateId();
-        registration.timestamp = new Date().toISOString();
-        registrations.push(registration);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(registrations));
-        return true;
-    } catch (error) {
-        console.error('Error saving to local storage:', error);
-        return false;
-    }
-}
-
-/**
- * Delete registration from local storage
- */
 function deleteFromLocalStorage(id) {
     try {
-        let registrations = getFromLocalStorage();
-        registrations = registrations.filter(reg => reg.id !== id);
+        let registrations = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+        registrations = registrations.filter(r => r.id !== id);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(registrations));
         return true;
     } catch (error) {
-        console.error('Error deleting from local storage:', error);
+        console.error('Error deleting:', error);
         return false;
     }
-}
-
-// ==================== FORM DATA HANDLING ====================
-
-/**
- * Fetch form data from inputs
- */
-function fetchFormData() {
-    const form = document.getElementById('registrationForm');
-    const formData = new FormData(form);
-
-    return {
-        fullName: formData.get('fullName').trim(),
-        email: formData.get('email').trim().toLowerCase(),
-        phone: formData.get('phone').trim(),
-        password: formData.get('password'),
-        gender: formData.get('gender'),
-        address: formData.get('address').trim(),
-        emailConsent: form.querySelector('#emailConsent').checked
-    };
-}
-
-/**
- * Clear form fields
- */
-function clearForm() {
-    document.getElementById('registrationForm').reset();
-    document.querySelectorAll('.invalid-feedback').forEach(el => el.textContent = '');
 }
 
 // ==================== AJAX SIMULATION ====================
 
-/**
- * Simulate AJAX POST request
- * Educational demonstration of AJAX POST pattern
- */
 function simulateAjaxPost(data) {
-    return new Promise((resolve, reject) => {
-        // Simulate network delay (500-1500ms)
-        const delay = Math.random() * 1000 + 500;
-
+    return new Promise((resolve) => {
+        // Simulate 1-2 second network delay
         setTimeout(() => {
-            // Simulate server-side validation and processing
-            // In real scenario, this would be an actual HTTP POST request
-
-            // Success response (90% chance)
-            if (Math.random() > 0.1) {
-                resolve({
-                    success: true,
-                    message: 'Registration successful! Your data has been saved.',
-                    data: data,
-                    statusCode: 200
-                });
-            } else {
-                // Simulate occasional errors (10% chance)
-                reject({
-                    success: false,
-                    message: 'Server error: Please try again later',
-                    statusCode: 500
-                });
-            }
-        }, delay);
+            resolve({
+                success: true,
+                message: 'Registration submitted successfully!',
+                data: data
+            });
+        }, Math.random() * 1000 + 1000);
     });
 }
 
-// ==================== NOTIFICATION FUNCTIONS ====================
+// ==================== FORM SUBMISSION ====================
 
-/**
- * Show success notification
- */
-function showSuccessNotification(message) {
-    const successAlert = document.getElementById('successAlert');
-    const successMessage = document.getElementById('successMessage');
-    const errorAlert = document.getElementById('errorAlert');
-
-    errorAlert.classList.add('d-none');
-    successMessage.textContent = message;
-    successAlert.classList.remove('d-none');
-
-    // Auto-hide after 5 seconds
-    setTimeout(() => {
-        successAlert.classList.add('d-none');
-    }, 5000);
-}
-
-/**
- * Show error notification
- */
-function showErrorNotification(message) {
-    const errorAlert = document.getElementById('errorAlert');
-    const errorMessage = document.getElementById('errorMessage');
-    const successAlert = document.getElementById('successAlert');
-
-    successAlert.classList.add('d-none');
-    errorMessage.textContent = message;
-    errorAlert.classList.remove('d-none');
-
-    // Auto-hide after 5 seconds
-    setTimeout(() => {
-        errorAlert.classList.add('d-none');
-    }, 5000);
-}
-
-// ==================== MAIN SUBMISSION HANDLER ====================
-
-/**
- * Handle form submission with AJAX
- */
 async function submitRegistration(e) {
     e.preventDefault();
 
-    // Clear previous alerts
-    document.getElementById('successAlert').classList.add('d-none');
-    document.getElementById('errorAlert').classList.add('d-none');
+    // Get form data
+    const formData = getFormData();
 
-    // Fetch form data
-    const formData = fetchFormData();
-
-    // Validate form
-    const errors = validateForm(formData);
-    if (!displayValidationErrors(errors)) {
+    // Validate
+    const error = validateForm(formData);
+    if (error) {
+        alert(error);
         return;
     }
 
-    // Show loading spinner
-    const loadingSpinner = document.getElementById('loadingSpinner');
-    const submitBtn = document.getElementById('submitBtn');
-    loadingSpinner.classList.remove('d-none');
-    submitBtn.disabled = true;
+    // Show loading
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Submitting...';
 
     try {
-        // Simulate AJAX POST request
-        console.log('Sending AJAX POST with data:', formData);
+        // AJAX POST simulation
+        console.log('Sending AJAX POST:', formData);
         const response = await simulateAjaxPost(formData);
 
         // Save to local storage
         if (saveToLocalStorage(formData)) {
-            showSuccessNotification(response.message);
-            clearForm();
+            alert(response.message);
+            document.getElementById('registrationForm').reset();
 
-            // Update record count
-            updateRecordCount();
-
-            // Optional: Redirect to list page after 2 seconds
+            // Redirect to list page
             setTimeout(() => {
-                // Uncomment to auto-redirect:
-                // window.location.href = 'registrationList.html';
-            }, 2000);
+                window.location.href = 'registrationList.html';
+            }, 500);
         } else {
-            showErrorNotification('Failed to save registration. Please try again.');
+            alert('Error saving data');
         }
     } catch (error) {
-        console.error('Error during registration:', error);
-        showErrorNotification(error.message || 'An error occurred during registration');
+        alert('Error: ' + error.message);
     } finally {
-        // Hide loading spinner
-        loadingSpinner.classList.add('d-none');
-        submitBtn.disabled = false;
+        btn.disabled = false;
+        btn.textContent = 'Register';
     }
-}
-
-// ==================== UTILITIES ====================
-
-/**
- * Update record count display
- */
-function updateRecordCount() {
-    const registrations = getFromLocalStorage();
-    console.log(`Total registrations: ${registrations.length}`);
-}
-
-/**
- * Initialize form with event listeners
- */
-function initializeForm() {
-    // Simple blur validation for all fields
-    document.getElementById('fullName').addEventListener('blur', function() {
-        const error = validateFullName(this.value);
-        document.getElementById('fullNameError').textContent = error;
-    });
-
-    document.getElementById('email').addEventListener('blur', function() {
-        const error = validateEmail(this.value);
-        document.getElementById('emailError').textContent = error;
-    });
-
-    document.getElementById('phone').addEventListener('blur', function() {
-        const error = validatePhone(this.value);
-        document.getElementById('phoneError').textContent = error;
-    });
-
-    document.getElementById('password').addEventListener('blur', function() {
-        const error = validatePassword(this.value);
-        document.getElementById('passwordError').textContent = error;
-    });
-
-    document.getElementById('confirmPassword').addEventListener('blur', function() {
-        const password = document.getElementById('password').value;
-        const error = validateConfirmPassword(password, this.value);
-        document.getElementById('confirmPasswordError').textContent = error;
-    });
-
-    console.log('Registration form initialized');
 }
 
 // ==================== PAGE INITIALIZATION ====================
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Registration page loaded');
-    initializeForm();
-    updateRecordCount();
-
-    // Log existing registrations for debugging
-    const registrations = getFromLocalStorage();
-    console.log('Existing registrations:', registrations);
+    const form = document.getElementById('registrationForm');
+    if (form) {
+        form.addEventListener('submit', submitRegistration);
+    }
+    console.log('Registration page ready');
 });
