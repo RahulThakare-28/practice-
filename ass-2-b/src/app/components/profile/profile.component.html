@@ -1,0 +1,133 @@
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+      <!-- Current User Profile Card -->
+      <div class="card shadow-lg mb-4">
+        <div class="card-header bg-success text-white">
+          <div class="d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">
+              <i class="bi bi-person-circle"></i> User Profile
+            </h2>
+            <button (click)="logout()" class="btn btn-light btn-sm">
+              <i class="bi bi-box-arrow-right"></i> Logout
+            </button>
+          </div>
+        </div>
+
+        <div class="card-body" *ngIf="currentUser">
+          <!-- Profile Information -->
+          <div class="row mb-4">
+            <div class="col-md-3 text-center mb-3 mb-md-0">
+              <div class="profile-avatar">
+                <i class="bi bi-person-fill"></i>
+              </div>
+            </div>
+            <div class="col-md-9">
+              <h3 class="mb-3">{{ currentUser.fullName }}</h3>
+
+              <div class="profile-info">
+                <div class="info-row">
+                  <strong>Email:</strong>
+                  <span>{{ currentUser.email }}</span>
+                </div>
+                <div class="info-row">
+                  <strong>Phone:</strong>
+                  <span>{{ currentUser.phone }}</span>
+                </div>
+                <div class="info-row">
+                  <strong>Gender:</strong>
+                  <span class="badge bg-secondary">{{ currentUser.gender }}</span>
+                </div>
+                <div class="info-row" *ngIf="currentUser.address">
+                  <strong>Address:</strong>
+                  <span>{{ currentUser.address }}</span>
+                </div>
+                <div class="info-row" *ngIf="currentUser.timestamp">
+                  <strong>Registered:</strong>
+                  <span><small>{{ currentUser.timestamp }}</small></span>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="mt-4">
+                <button (click)="editProfile()" class="btn btn-primary btn-sm me-2">
+                  <i class="bi bi-pencil"></i> Edit Profile
+                </button>
+                <button (click)="deleteAccount()" class="btn btn-danger btn-sm">
+                  <i class="bi bi-trash"></i> Delete Account
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <hr />
+
+          <!-- Additional Info -->
+          <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i>
+            <strong>Account Information:</strong> Your data is securely stored in your browser's local storage.
+            You can edit your profile or delete your account at any time.
+          </div>
+        </div>
+
+        <div class="card-body" *ngIf="!currentUser && !isLoading">
+          <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle"></i>
+            <strong>Not Logged In!</strong> Please <a routerLink="/login">login</a> to view your profile.
+          </div>
+        </div>
+
+        <div class="card-body" *ngIf="isLoading">
+          <div class="text-center">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Loading profile...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- All Users List (Admin View) -->
+      <div class="card shadow-lg" *ngIf="allUsers.length > 0">
+        <div class="card-header bg-info text-white">
+          <h5 class="mb-0">
+            <i class="bi bi-people"></i> All Registered Users ({{ allUsers.length }})
+          </h5>
+        </div>
+
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Sr.</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Gender</th>
+                  <th>Registered</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let user of allUsers; let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td><strong>{{ user.fullName }}</strong></td>
+                  <td>{{ user.email }}</td>
+                  <td>{{ user.phone }}</td>
+                  <td><span class="badge bg-secondary">{{ user.gender }}</span></td>
+                  <td><small>{{ user.timestamp }}</small></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- No Users Message -->
+      <div class="alert alert-warning text-center mt-4" *ngIf="allUsers.length === 0 && !isLoading">
+        <i class="bi bi-exclamation-circle"></i>
+        <p class="mb-0">No registered users yet. Be the first to <a routerLink="/register">register</a>!</p>
+      </div>
+    </div>
+  </div>
+</div>
