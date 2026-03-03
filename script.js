@@ -1,17 +1,17 @@
 // Sample data for results table
 const examResults = [
-    { id: 1, name: 'Rahul Sharma', exam: 'Mathematics', marks: 85, status: 'Pass' },
+    { id: 1, name: 'Rahul Thakare', exam: 'Mathematics', marks: 85, status: 'Pass' },
     { id: 2, name: 'Anita Verma', exam: 'Physics', marks: 42, status: 'Fail' },
-    { id: 3, name: 'Mohit Singh', exam: 'Chemistry', marks: 76, status: 'Pass' },
+    { id: 3, name: 'krushna shinde', exam: 'Chemistry', marks: 76, status: 'Pass' },
     { id: 4, name: 'Pooja Mehta', exam: 'Biology', marks: 59, status: 'Pass' },
     { id: 5, name: 'Priya Kumar', exam: 'Mathematics', marks: 92, status: 'Pass' },
-    { id: 6, name: 'Arjun Patel', exam: 'Physics', marks: 38, status: 'Fail' }
+    { id: 6, name: 'pranav wabale', exam: 'Physics', marks: 38, status: 'Fail' }
 ];
 
 const students = [
-    { id: 1, name: 'Rahul Sharma', email: 'rahul@example.com' },
+    { id: 1, name: 'Rahul Thakare', email: 'rahul.thakare@example.com' },
     { id: 2, name: 'Anita Verma', email: 'anita@example.com' },
-    { id: 3, name: 'Mohit Singh', email: 'mohit@example.com' }
+    { id: 3, name: 'krushna shinde', email: 'krushna.shinde@example.com' }
 ];
 
 const exams = [
