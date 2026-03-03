@@ -110,13 +110,16 @@ async function submitRegistration(e) {
 
         // Save to local storage
         if (saveToLocalStorage(formData)) {
-            alert(response.message);
+            // Show success alert
+            const successAlert = document.getElementById('successAlert');
+            successAlert.classList.remove('d-none');
+
             document.getElementById('registrationForm').reset();
 
-            // Redirect to list page
+            // Redirect to list page after 2 seconds
             setTimeout(() => {
                 window.location.href = 'registrationList.html';
-            }, 500);
+            }, 2000);
         } else {
             alert('Error saving data');
         }
