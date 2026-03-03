@@ -394,7 +394,7 @@ function updateRecordCount() {
  * Initialize form with event listeners
  */
 function initializeForm() {
-    // Add real-time validation
+    // Simple blur validation for all fields
     document.getElementById('fullName').addEventListener('blur', function() {
         const error = validateFullName(this.value);
         document.getElementById('fullNameError').textContent = error;
@@ -415,29 +415,10 @@ function initializeForm() {
         document.getElementById('passwordError').textContent = error;
     });
 
-    // Real-time validation for password field - also validate confirm password when password changes
-    document.getElementById('password').addEventListener('input', function() {
-        const confirmPasswordField = document.getElementById('confirmPassword');
-        // If confirm password is already filled, re-validate it when password changes
-        if (confirmPasswordField.value) {
-            const error = validateConfirmPassword(this.value, confirmPasswordField.value);
-            document.getElementById('confirmPasswordError').textContent = error;
-        }
-    });
-
     document.getElementById('confirmPassword').addEventListener('blur', function() {
         const password = document.getElementById('password').value;
         const error = validateConfirmPassword(password, this.value);
         document.getElementById('confirmPasswordError').textContent = error;
-    });
-
-    // Real-time validation for confirm password field
-    document.getElementById('confirmPassword').addEventListener('input', function() {
-        const password = document.getElementById('password').value;
-        if (this.value) {
-            const error = validateConfirmPassword(password, this.value);
-            document.getElementById('confirmPasswordError').textContent = error;
-        }
     });
 
     console.log('Registration form initialized');
